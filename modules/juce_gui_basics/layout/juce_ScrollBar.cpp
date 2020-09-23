@@ -111,7 +111,7 @@ bool ScrollBar::setCurrentRange (Range<double> newRange, NotificationType notifi
 
 void ScrollBar::setCurrentRange (double newStart, double newSize, NotificationType notification)
 {
-    if (hideWhenNotScrolling)
+    if (hideWhenNotScrolling && !isMouseOver())
     {
         setVisible(true);
         startTimer(fadeOutTimerId, hideWhenNotScrollingDelayInMs);
@@ -503,6 +503,18 @@ std::unique_ptr<AccessibilityHandler> ScrollBar::createAccessibilityHandler()
                                                    AccessibilityRole::scrollBar,
                                                    AccessibilityActions{},
                                                    AccessibilityHandler::Interfaces { std::make_unique<ValueInterface> (*this) });
+
+void ScrollBar::mouseEnter(const MouseEvent &event)
+{
+    if (hideWhenNotScrolling)
+        stopTimer (fadeOutTimerId);
+}
+
+void ScrollBar::mouseExit(const MouseEvent &event)
+{
+    if (hideWhenNotScrolling)
+        startTimer (fadeOutTimerId, hideWhenNotScrollingDelayInMs);
+
 }
 
 } // namespace juce
