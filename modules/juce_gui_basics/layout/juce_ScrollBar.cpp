@@ -435,6 +435,9 @@ void ScrollBar::timerCallback(int timerId)
     {
         stopTimer(fadeOutTimerId);
         setVisible(false);
+
+        listeners.call ([=] (Listener& l) {
+            l.scrollBarFadeoutCompleted(this); });
     }
 }
 
@@ -508,6 +511,8 @@ void ScrollBar::mouseEnter(const MouseEvent &event)
 {
     if (hideWhenNotScrolling)
         stopTimer (fadeOutTimerId);
+
+    listeners.call ([=] (Listener& l) { l.scrollBarMouseEnter (this); });
 }
 
 void ScrollBar::mouseExit(const MouseEvent &event)
@@ -515,6 +520,7 @@ void ScrollBar::mouseExit(const MouseEvent &event)
     if (hideWhenNotScrolling)
         startTimer (fadeOutTimerId, hideWhenNotScrollingDelayInMs);
 
+    listeners.call ([=] (Listener& l) { l.scrollBarMouseExit (this); });
 }
 
 } // namespace juce

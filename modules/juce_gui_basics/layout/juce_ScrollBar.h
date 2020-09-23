@@ -341,6 +341,10 @@ public:
         */
         virtual void scrollBarMoved (ScrollBar* scrollBarThatHasMoved,
                                      double newRangeStart) = 0;
+
+        virtual void scrollBarMouseEnter (ScrollBar *) {};
+        virtual void scrollBarMouseExit (ScrollBar *) {};
+        virtual void scrollBarFadeoutCompleted (ScrollBar *) {};
     };
 
     /** Registers a listener that will be called when the scrollbar is moved. */
