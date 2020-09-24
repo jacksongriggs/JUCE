@@ -325,8 +325,6 @@ void Viewport::setPlaceScrollbarOverContent(bool shouldPlaceVScrollbarOverConten
 {
     placeVScrollbarOverContent = shouldPlaceVScrollbarOverContent;
     placeHScrollbarOverContent = shouldPlaceHScrollbarOverContent;
-
-    updateVisibleArea();
 }
 
 bool Viewport::isVerticalScrollbarOverContent() const noexcept
@@ -344,6 +342,8 @@ void Viewport::sethHideScrollbarWhenNotScrolling(bool shouldHideVScrollbarWhenNo
     verticalScrollBar->setHideWhenNotScrolling(shouldHideVScrollbarWhenNotScrolling);
     horizontalScrollBar->setHideWhenNotScrolling(shouldHideHScrollbarWhenNotScrolling);
 
+    vScrollbarMouseOver = hScrollbarMouseOver = false;
+
     allowScrollingWithoutScrollbarV = shouldHideVScrollbarWhenNotScrolling;
     allowScrollingWithoutScrollbarH = shouldHideHScrollbarWhenNotScrolling;
 }
@@ -352,6 +352,7 @@ void Viewport::setAlwaysShowScrollbars (bool shouldAlwaysShowScrollbars)
 {
     sethHideScrollbarWhenNotScrolling (!shouldAlwaysShowScrollbars, !shouldAlwaysShowScrollbars);
     setPlaceScrollbarOverContent (!shouldAlwaysShowScrollbars, !shouldAlwaysShowScrollbars);
+    updateVisibleArea();
 }
 	
 //==============================================================================
