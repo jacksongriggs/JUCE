@@ -658,7 +658,7 @@ void Viewport::scrollBarMouseEnter (ScrollBar * s)
         vScrollbarMouseOver = true;
 
     updateVisibleArea();
-};
+}
 
 void Viewport::scrollBarMouseExit (ScrollBar * s)
 {
@@ -674,7 +674,7 @@ void Viewport::scrollBarMouseExit (ScrollBar * s)
         vScrollbarMouseOver = false;
 
     updateVisibleArea();
-};
+}
 
 void Viewport::scrollBarFadeoutCompleted (ScrollBar * s)
 {
