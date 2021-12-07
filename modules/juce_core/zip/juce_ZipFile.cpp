@@ -469,7 +469,7 @@ struct ZipFile::Builder::Item
         symbolicLink = (file.exists() && file.isSymbolicLink());
     }
 
-    bool writeData (OutputStream& target, const int64 overallStartPosition)
+    bool writeData (OutputStream& target, const int64 overallStartPosition, const std::function<bool()>& shouldAbort)
     {
         MemoryOutputStream compressedData ((size_t) file.getSize());
 
@@ -486,14 +486,17 @@ struct ZipFile::Builder::Item
         {
             GZIPCompressorOutputStream compressor (compressedData, compressionLevel,
                                                    GZIPCompressorOutputStream::windowBitsRaw);
-            if (! writeSource (compressor))
+            if (! writeSource (compressor, shouldAbort))
                 return false;
         }
         else
         {
-            if (! writeSource (compressedData))
+            if (! writeSource (compressedData, shouldAbort))
                 return false;
         }
+
+        if (shouldAbort())
+            return false;
 
         compressedSize = (int64) compressedData.getDataSize();
         headerStart = target.getPosition() - overallStartPosition;
@@ -537,7 +540,7 @@ private:
         target.writeShort ((short) (t.getDayOfMonth() + ((t.getMonth() + 1) << 5) + ((t.getYear() - 1980) << 9)));
     }
 
-    bool writeSource (OutputStream& target)
+    bool writeSource (OutputStream& target, const std::function<bool()>& shouldAbort)
     {
         if (stream == nullptr)
         {
@@ -552,7 +555,7 @@ private:
         const int bufferSize = 4096;
         HeapBlock<unsigned char> buffer (bufferSize);
 
-        while (! stream->isExhausted())
+        while (! stream->isExhausted() && !shouldAbort())
         {
             auto bytesRead = stream->read (buffer, bufferSize);
 
@@ -563,6 +566,9 @@ private:
             target.write (buffer, (size_t) bytesRead);
             uncompressedSize += bytesRead;
         }
+
+        if (shouldAbort())
+            return false;
 
         stream.reset();
         return true;
@@ -604,6 +610,11 @@ void ZipFile::Builder::addEntry (InputStream* stream, int compression, const Str
 
 bool ZipFile::Builder::writeToStream (OutputStream& target, double* const progress) const
 {
+    return writeToStream (target, progress, []() { return false; });
+}
+
+bool ZipFile::Builder::writeToStream (OutputStream& target, double* const progress, const std::function<bool()>& shouldAbort) const
+{
     auto fileStart = target.getPosition();
 
     for (int i = 0; i < items.size(); ++i)
@@ -611,7 +622,7 @@ bool ZipFile::Builder::writeToStream (OutputStream& target, double* const progre
         if (progress != nullptr)
             *progress = (i + 0.5) / items.size();
 
-        if (! items.getUnchecked (i)->writeData (target, fileStart))
+        if (! items.getUnchecked (i)->writeData (target, fileStart, shouldAbort))
             return false;
     }
 

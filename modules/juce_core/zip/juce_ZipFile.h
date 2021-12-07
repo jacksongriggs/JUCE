@@ -227,6 +227,16 @@ public:
         */
         bool writeToStream (OutputStream& target, double* progress) const;
 
+        /** Generates the zip file, writing it to the specified stream.
+            If the progress parameter is non-null, it will be updated with an approximate
+            progress status between 0 and 1.0
+            @param shouldAbort - if this returns true the method will abandon the zip operation, could be used to check Thread::threadShouldExit()
+                e.g. myZip.writeToStream(target, progress, [](){return Thread::currentThreadShouldExit();});
+        */
+        bool writeToStream (OutputStream& target, double* progress, const std::function<bool()>& shouldAbort) const;
+        
+
+
         //==============================================================================
     private:
         struct Item;
