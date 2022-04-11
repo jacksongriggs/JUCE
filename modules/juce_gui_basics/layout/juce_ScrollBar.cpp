@@ -501,6 +501,7 @@ std::unique_ptr<AccessibilityHandler> ScrollBar::createAccessibilityHandler()
                                                    AccessibilityRole::scrollBar,
                                                    AccessibilityActions{},
                                                    AccessibilityHandler::Interfaces { std::make_unique<ValueInterface> (*this) });
+}
 
 void ScrollBar::mouseEnter(const MouseEvent &event)
 {
