@@ -536,10 +536,16 @@ void Viewport::updateVisibleArea()
         hbar.setVisible (hBarVisible);
     }
 
-    if (!scrollbarPlacement == ScrollbarPlacement::overContent)
-        vbar.setBounds(vScrollbarRight ? contentArea.getWidth() : 0, contentArea.getY(), vScrollbarWidth, contentArea.getHeight());
+    if (scrollbarPlacement == ScrollbarPlacement::overContent)
+        vbar.setBounds (vScrollbarRight ? contentArea.getWidth() - vScrollbarWidth : 0,
+                        contentArea.getY(),
+                        vScrollbarWidth,
+                        contentArea.getHeight());
     else
-        vbar.setBounds(vScrollbarRight ? contentArea.getWidth() - vScrollbarWidth : 0, contentArea.getY(), vScrollbarWidth, contentArea.getHeight());
+        vbar.setBounds (vScrollbarRight ? contentArea.getWidth() : 0,
+                        contentArea.getY(),
+                        vScrollbarWidth,
+                        contentArea.getHeight());
 
     if (! allowScrollingWithoutScrollbarV || visibleOriginYChanged)
     {
