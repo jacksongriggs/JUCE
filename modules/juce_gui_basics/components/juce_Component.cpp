@@ -23,6 +23,8 @@
   ==============================================================================
 */
 
+//#include "Source/lc_resize_tracker.h"
+
 namespace juce
 {
 
@@ -1098,6 +1100,8 @@ void Component::setBounds (int x, int y, int w, int h)
     // if component methods are being called from threads other than the message
     // thread, you'll need to use a MessageManagerLock object to make sure it's thread-safe.
     JUCE_ASSERT_MESSAGE_MANAGER_IS_LOCKED_OR_OFFSCREEN
+
+    //lLog::logSetBounds (this, { x, y, w, h });
 
     if (w < 0) w = 0;
     if (h < 0) h = 0;
