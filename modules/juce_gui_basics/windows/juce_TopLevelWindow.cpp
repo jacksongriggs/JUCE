@@ -201,8 +201,9 @@ int TopLevelWindow::getDesktopWindowStyleFlags() const
 {
     int styleFlags = ComponentPeer::windowAppearsOnTaskbar;
 
-    if (useDropShadow)       styleFlags |= ComponentPeer::windowHasDropShadow;
-    if (useNativeTitleBar)   styleFlags |= ComponentPeer::windowHasTitleBar;
+    if (useDropShadow)               styleFlags |= ComponentPeer::windowHasDropShadow;
+    if (useNativeTitleBar)           styleFlags |= ComponentPeer::windowHasTitleBar;
+    if (nativeTitleBarTransparent)   styleFlags |= ComponentPeer::windowHasTransparentTitleBar;
 
     return styleFlags;
 }
@@ -241,6 +242,17 @@ void TopLevelWindow::setUsingNativeTitleBar (const bool shouldUseNativeTitleBar)
     {
         FocusRestorer focusRestorer;
         useNativeTitleBar = shouldUseNativeTitleBar;
+        recreateDesktopWindow();
+        sendLookAndFeelChange();
+    }
+}
+
+void TopLevelWindow::setNativeTitleBarTransparent (const bool shouldNativeTitleBarBeTransparent)
+{
+    if (nativeTitleBarTransparent != shouldNativeTitleBarBeTransparent)
+    {
+        FocusRestorer focusRestorer;
+        nativeTitleBarTransparent = shouldNativeTitleBarBeTransparent;
         recreateDesktopWindow();
         sendLookAndFeelChange();
     }

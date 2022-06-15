@@ -136,6 +136,9 @@ public:
             if ((windowStyleFlags & (windowHasMaximiseButton | windowHasTitleBar)) == (windowHasMaximiseButton | windowHasTitleBar))
                 [window setCollectionBehavior: NSWindowCollectionBehaviorFullScreenPrimary];
 
+            if ((windowStyleFlags & windowHasTransparentTitleBar) == windowHasTransparentTitleBar)
+                [window setTitlebarAppearsTransparent:YES];
+
             if ([window respondsToSelector: @selector (setRestorable:)])
                 [window setRestorable: NO];
 
@@ -1337,9 +1340,10 @@ public:
         unsigned int style = (flags & windowHasTitleBar) != 0 ? NSWindowStyleMaskTitled
                                                               : NSWindowStyleMaskBorderless;
 
-        if ((flags & windowHasMinimiseButton) != 0)  style |= NSWindowStyleMaskMiniaturizable;
-        if ((flags & windowHasCloseButton) != 0)     style |= NSWindowStyleMaskClosable;
-        if ((flags & windowIsResizable) != 0)        style |= NSWindowStyleMaskResizable;
+        if ((flags & windowHasTransparentTitleBar) != 0)  style |= NSWindowStyleMaskFullSizeContentView;
+        if ((flags & windowHasMinimiseButton) != 0)       style |= NSWindowStyleMaskMiniaturizable;
+        if ((flags & windowHasCloseButton) != 0)          style |= NSWindowStyleMaskClosable;
+        if ((flags & windowIsResizable) != 0)             style |= NSWindowStyleMaskResizable;
         return style;
     }
 

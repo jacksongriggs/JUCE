@@ -108,6 +108,20 @@ public:
     */
     bool isUsingNativeTitleBar() const noexcept;
 
+    /** Sets whether the OS-native title bar (if in use) will be transparent.
+        Notice that this will be ignored if you are not using an OS-native title bar!
+        Also, this is currently only supported on Mac.
+        @see setUsingNativeTitleBar, isNativeTitleBarTransparent
+    */
+    void setNativeTitleBarTransparent (bool nativeTitleBarTransparent);
+
+    /** Returns true if the window is currently using a transparent title bar.
+        Notice that this is only relevant when you are using an OS-native title bar
+        (if you are NOT using an OS-native title bar, this value will simply be ignored)
+        @see setNativeTitleBarTransparent
+    */
+    bool isNativeTitleBarTransparent() const noexcept;
+
     //==============================================================================
     /** Returns the number of TopLevelWindow objects currently in use.
         @see getTopLevelWindow
@@ -156,7 +170,7 @@ protected:
 private:
     friend class TopLevelWindowManager;
     friend class ResizableWindow;
-    bool useDropShadow = true, useNativeTitleBar = false, isCurrentlyActive = false;
+    bool useDropShadow = true, useNativeTitleBar = false, nativeTitleBarTransparent = false, isCurrentlyActive = false;
     std::unique_ptr<DropShadower> shadower;
 
     void setWindowActive (bool);
