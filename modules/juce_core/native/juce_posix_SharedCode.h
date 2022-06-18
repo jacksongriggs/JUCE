@@ -951,9 +951,13 @@ void JUCE_CALLTYPE Thread::setCurrentThreadName (const String& name)
 
 bool Thread::setThreadPriority (void* handle, int priority)
 {
+    constexpr auto minInputPriority =0;
     constexpr auto maxInputPriority = 10;
     constexpr auto lowestRealtimePriority = 8;
-
+    
+    jassert(priority<=maxInputPriority);
+    jassert(priority>=minInputPriority);
+    
     struct sched_param param;
     int policy;
 
@@ -967,17 +971,12 @@ bool Thread::setThreadPriority (void* handle, int priority)
 
     const auto minPriority = sched_get_priority_min (policy);
     const auto maxPriority = sched_get_priority_max (policy);
-
-    param.sched_priority = [&]
-    {
-        if (policy == SCHED_OTHER)
-            return 0;
-
-        return jmap (priority, lowestRealtimePriority, maxInputPriority, minPriority, maxPriority);
-    }();
+    
+    param.sched_priority = jmap(priority,minInputPriority,maxInputPriority, minPriority, maxPriority);
 
     return pthread_setschedparam ((pthread_t) handle, policy, &param) == 0;
 }
+
 
 Thread::ThreadID JUCE_CALLTYPE Thread::getCurrentThreadId()
 {
