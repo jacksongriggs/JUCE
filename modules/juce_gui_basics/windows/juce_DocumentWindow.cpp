@@ -119,9 +119,10 @@ void DocumentWindow::setTitleBarTextCentred (const bool textShouldBeCentred)
     repaintTitleBar();
 }
 
-void DocumentWindow::setPositionMenuBarInsideTitleBar (bool shouldPositionMenuBarInsideTitleBar)
+void DocumentWindow::setPositionMenuBarInsideTitleBar (bool shouldPositionMenuBarInsideTitleBar, int menuBarWidth)
 {
     positionMenuBarInsideTitleBar = shouldPositionMenuBarInsideTitleBar;
+    menuBarWidthWhenInsideTitleBar = menuBarWidth;
     resized();
 }
 
@@ -246,8 +247,10 @@ void DocumentWindow::resized()
             if (positionTitleBarButtonsOnLeft)
                 jassertfalse; // on Windows buttons are on the right. Not supported. Easy to do if we ever need!
 
-            menuBar->setBounds (titleBarArea.getX(), titleBarArea.getY(),
-                                titleBarArea.getWidth(), titleBarArea.getHeight());
+            menuBar->setBounds (titleBarArea.getX(),
+                                titleBarArea.getY(),
+                                menuBarWidthWhenInsideTitleBar > 0 ? menuBarWidthWhenInsideTitleBar : titleBarArea.getWidth(),
+                                titleBarArea.getHeight());
         }
         else
         {
