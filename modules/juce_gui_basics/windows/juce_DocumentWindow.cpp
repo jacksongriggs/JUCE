@@ -119,6 +119,12 @@ void DocumentWindow::setTitleBarTextCentred (const bool textShouldBeCentred)
     repaintTitleBar();
 }
 
+void DocumentWindow::setPositionMenuBarInsideTitleBar (bool shouldPositionMenuBarInsideTitleBar)
+{
+    positionMenuBarInsideTitleBar = shouldPositionMenuBarInsideTitleBar;
+    resized();
+}
+
 //==============================================================================
 void DocumentWindow::setMenuBar (MenuBarModel* newMenuBarModel, const int newMenuBarHeight)
 {
@@ -234,8 +240,21 @@ void DocumentWindow::resized()
                                         positionTitleBarButtonsOnLeft);
 
     if (menuBar != nullptr)
-        menuBar->setBounds (titleBarArea.getX(), titleBarArea.getBottom(),
-                            titleBarArea.getWidth(), menuBarHeight);
+    {
+        if (positionMenuBarInsideTitleBar)
+        {
+            if (positionTitleBarButtonsOnLeft)
+                jassertfalse; // on Windows buttons are on the right. Not supported. Easy to do if we ever need!
+
+            menuBar->setBounds (titleBarArea.getX(), titleBarArea.getY(),
+                                titleBarArea.getWidth(), titleBarArea.getHeight());
+        }
+        else
+        {
+            menuBar->setBounds (titleBarArea.getX(), titleBarArea.getBottom(),
+                    titleBarArea.getWidth(), menuBarHeight);
+        }
+    }
 }
 
 BorderSize<int> DocumentWindow::getBorderThickness()
@@ -250,7 +269,7 @@ BorderSize<int> DocumentWindow::getContentComponentBorder()
     if (! isKioskMode())
         border.setTop (border.getTop()
                         + (isUsingNativeTitleBar() ? 0 : titleBarHeight)
-                        + (menuBar != nullptr ? menuBarHeight : 0));
+                        + ((menuBar != nullptr) && !positionMenuBarInsideTitleBar ? menuBarHeight : 0));
 
     return border;
 }

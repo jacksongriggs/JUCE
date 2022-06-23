@@ -137,6 +137,8 @@ public:
     */
     void setTitleBarTextCentred (bool textShouldBeCentred);
 
+    void setPositionMenuBarInsideTitleBar (bool shouldPositionMenuBarInsideTitleBar);
+
     //==============================================================================
     /** Creates a menu inside this window.
 
@@ -279,6 +281,7 @@ private:
     //==============================================================================
     int titleBarHeight = 26, menuBarHeight = 24, requiredButtons;
     bool positionTitleBarButtonsOnLeft, drawTitleTextCentred = true;
+    bool positionMenuBarInsideTitleBar = false;
     std::unique_ptr<Button> titleBarButtons [3];
     Image titleBarIcon;
     std::unique_ptr<Component> menuBar;
