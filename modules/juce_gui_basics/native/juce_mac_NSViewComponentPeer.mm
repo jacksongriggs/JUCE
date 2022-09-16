@@ -610,6 +610,28 @@ public:
     void redirectMouseUp (NSEvent* ev)
     {
         ModifierKeys::currentModifiers = ModifierKeys::currentModifiers.withoutFlags (getModifierForButtonNumber ([ev buttonNumber]));
+
+        // When the titlebar is made transparent, for some reason we lose the ability to double-click the
+        // titlebar to maximise/minimise. This Should fix it by manually performing a zoom operation when
+        // detecting a double click inside the titlebar area.
+        // See: https://stackoverflow.com/questions/52150960/double-click-on-transparent-nswindow-title-does-not-maximize-the-window
+        if (window.titlebarAppearsTransparent)
+        {
+            if (ev.clickCount >= 2)
+            {
+                auto windowFrame = window.contentView.frame;
+                auto titleBarRect = CGRectMake (window.contentLayoutRect.origin.x,
+                                                window.contentLayoutRect.origin.y + window.contentLayoutRect.size.height,
+                                                window.contentLayoutRect.size.width,
+                                                windowFrame.size.height - window.contentLayoutRect.size.height);
+
+                auto clickPoint = ev.locationInWindow;
+
+                if (CGRectContainsPoint (titleBarRect, clickPoint))
+                    [window performZoom:nil];
+            }
+        }
+
         sendMouseEvent (ev);
         showArrowCursorIfNeeded();
     }
