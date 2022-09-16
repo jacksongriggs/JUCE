@@ -137,7 +137,7 @@ public:
     */
     void setTitleBarTextCentred (bool textShouldBeCentred);
 
-    void setPositionMenuBarInsideTitleBar (bool shouldPositionMenuBarInsideTitleBar);
+    void setPositionMenuBarInsideTitleBar (bool shouldPositionMenuBarInsideTitleBar, int menuBarWidth = 0);
 
     //==============================================================================
     /** Creates a menu inside this window.
@@ -280,6 +280,7 @@ public:
 private:
     //==============================================================================
     int titleBarHeight = 26, menuBarHeight = 24, requiredButtons;
+    int menuBarWidthWhenInsideTitleBar = 0; // ignore this if = 0 (menu bar will use full width as usual)
     bool positionTitleBarButtonsOnLeft, drawTitleTextCentred = true;
     bool positionMenuBarInsideTitleBar = false;
     std::unique_ptr<Button> titleBarButtons [3];
