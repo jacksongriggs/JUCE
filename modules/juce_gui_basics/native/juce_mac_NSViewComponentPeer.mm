@@ -137,7 +137,12 @@ public:
                 [window setCollectionBehavior: NSWindowCollectionBehaviorFullScreenPrimary];
 
             if ((windowStyleFlags & windowHasTransparentTitleBar) == windowHasTransparentTitleBar)
+            {
                 [window setTitlebarAppearsTransparent:YES];
+                // See https://stackoverflow.com/questions/12322714/changing-color-of-nswindow-title-text and others...
+                [window setAppearance: [NSAppearance appearanceNamed: NSAppearanceNameVibrantDark]];
+            }
+
 
             if ([window respondsToSelector: @selector (setRestorable:)])
                 [window setRestorable: NO];
