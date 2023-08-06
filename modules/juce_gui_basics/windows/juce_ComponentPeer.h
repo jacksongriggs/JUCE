@@ -75,6 +75,8 @@ public:
                                                                            asynchronous Core Graphics drawing operations. Use this if there
                                                                            are issues with regions not being redrawn at the expected time
                                                                            (macOS and iOS only). */
+        windowHasTransparentTitleBar                    = (1 << 12),  /**< Indicates that the window should have a transparent OS-specific
+ *                                                                         title bar. Mac only for now! */
         windowIsSemiTransparent                         = (1 << 30)   /**< Not intended for public use - makes a window transparent. */
 
     };
